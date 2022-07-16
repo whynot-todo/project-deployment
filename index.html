@@ -9,14 +9,29 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>人生等级计算器</h2>
+    <h2 class="title">人生等级计算器</h2>
     <section class="calc">
         <input id="score" placeholder="请输入分数" type="text">
         <button id="btn">计算</button>
     </section>
     <section class="result">
-        <div>您的等级为:<span id="rank"></span></div>
-        <div>您距下一等级还差 <span id="diff"></span></div>
+        <div>您的等级为:<span id="rank">0</span></div>
+        <div>
+            <span>您距下一等级还差 </span> 
+            <span id="diff">0</span>
+            <span>技能点，至少还需要</span>
+            <span id="diff-days" class="diff-days">0</span>天
+        </div>
+        <div><span>您距满级还需要</span><span id="diff-years">0</span><span>天</span></div>
+        <section class="process-wrapper">
+            <div class="process">
+                <div id="diff-process" class="process-inner"></div>
+            </div>
+            <div id="skill-num">0</div>
+        </section>
     </section>
+<footer class="footer">
+    <div id="calc-time">0</div>
+</footer>
 </body>
 </html>
