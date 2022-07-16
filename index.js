@@ -4,6 +4,7 @@ window.onload = function () {
     const rankEle = document.getElementById("rank")
     const diffEle = document.getElementById("diff")
     const diffDayEle = document.getElementById("diff-days")
+    const processEle = document.getElementById("process")
     const diffProcess = document.getElementById("diff-process")
     const skillNumEle = document.getElementById("skill-num")
     const diffYearsEle = document.getElementById("diff-years")
@@ -39,7 +40,7 @@ window.onload = function () {
 
     const processProgress = (current, total) => {
         const precent = current / total
-        const wrapperWidth = window.getComputedStyle(diffProcess).width
+        const wrapperWidth = window.getComputedStyle(processEle).width
         const innerWidth = wrapperWidth.slice(0, -2) * 1 * precent
         diffProcess.style.width = `${innerWidth}px`
     }
