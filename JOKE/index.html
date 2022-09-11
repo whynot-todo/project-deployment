@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>每日一笑</title>
+    <script>
+        $(() => {
+            const $btn = $("#btn"), url = "https://bird.ioliu.cn/joke/rand"
+            const fetchJoke = () => {
+                $.getJSON(url, (res) => {
+                    const { data } = res
+                    _html = data.reduce((_pre, _cur) => {
+                        const { content, url, hashId } = _cur
+                        return _pre + `
+                            <section>
+                                <h2>${content}</h2>
+                                <img style="width:100%;" src="${url}" alt="${hashId}">
+                            </section>
+                        `
+                    }, "")
+                    $("#content").html(_html)
+                })
+            }
+            const init = () => fetchJoke()
+            init()
+            $btn.click(() => fetchJoke())
+        })
+                    </script>
+    </head>
+
+<body>
+    <h1>笑一笑十年少</h1>
+    <div id="content"></div>
+    <button id="btn">刷新</button>
+</body>
+
+</html>
