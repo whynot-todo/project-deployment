@@ -37,8 +37,12 @@
             const $btn = $("#btn"), url = "https://bird.ioliu.cn/joke/rand"
             const fetchJoke = () => {
                 $.getJSON(url, (res) => {
+                    let _html = ""
                     const { data } = res
-                    _html = data.reduce((_pre, _cur) => {
+                    if(JSON.stringify(data) == "{}"){
+                        _html = `<article>今日笑话已看完</article>`
+                    }else{
+                        _html = data.reduce((_pre, _cur) => {
                         const { content, url, hashId } = _cur
                         return _pre + `
                             <section>
@@ -47,6 +51,8 @@
                             </section>
                         `
                     }, "")
+                    }
+
                     $("#content").html(_html)
                 })
             }
