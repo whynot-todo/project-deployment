@@ -8,6 +8,30 @@
         content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <title>每日一笑</title>
+    <style>
+        .img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        article {
+            margin: 20px 0 10px 0;
+            padding: 10px;
+            border-left: 6px solid #dddfe4;
+            background-color: #eef0f4;
+        }
+
+        button {
+            display: block;
+            width: 100px;
+            border: none;
+            background-color: blue;
+            color: #fff;
+            padding: 5px 10px;
+            outline: none;
+            border-radius: 2px;
+        }
+    </style>
     <script>
         $(() => {
             const $btn = $("#btn"), url = "https://bird.ioliu.cn/joke/rand"
@@ -18,8 +42,8 @@
                         const { content, url, hashId } = _cur
                         return _pre + `
                             <section>
-                                <h2>${content}</h2>
-                                <img style="width:100%;" src="${url}" alt="${hashId}">
+                                <article>${content}</article>
+                                <img class="img" src="${url}" alt="${hashId}">
                             </section>
                         `
                     }, "")
@@ -30,8 +54,8 @@
             init()
             $btn.click(() => fetchJoke())
         })
-                    </script>
-    </head>
+    </script>
+</head>
 
 <body>
     <h1>笑一笑十年少</h1>
