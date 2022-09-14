@@ -50,6 +50,18 @@
         $(() => {
             const $btn = $("#btn"), url = "https://bird.ioliu.cn/joke/rand"
             const topBtnEle = document.getElementById("top-btn")
+            function throttle(func, delay) {
+                let run = true
+                return function () {
+                    if (!run) return
+                    run = false
+                    setTimeout(() => {
+                        func.apply(this, arguments)
+                        run = true
+                    }, delay)
+                }
+            }
+
             const fetchJoke = () => {
                 $.getJSON(url, (res) => {
                     let _html = ""
@@ -89,7 +101,7 @@
             const init = () => {
                 fetchJoke()
                 // 增加监听事件
-                window.onscroll = () => isShowTopBtn()
+                window.onscroll = throttle(isShowTopBtn, 100)
                 topBtnEle.onclick = () => toTop()
             }
 
