@@ -31,32 +31,68 @@
             outline: none;
             border-radius: 2px;
         }
+
+        #top-btn{
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            display: none;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #000;
+            background-image: url(https://g.csdnimg.cn/side-toolbar/3.4/images/fanhuidingbucopy.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
     </style>
     <script>
         $(() => {
             const $btn = $("#btn"), url = "https://bird.ioliu.cn/joke/rand"
+            const topBtnEle = document.getElementById("top-btn")
             const fetchJoke = () => {
                 $.getJSON(url, (res) => {
                     let _html = ""
                     const { data } = res
-                    if(JSON.stringify(data) == "{}"){
+                    if (JSON.stringify(data) == "{}") {
                         _html = `<article>今日笑话已看完</article>`
-                    }else{
+                    } else {
                         _html = data.reduce((_pre, _cur) => {
-                        const { content, url, hashId } = _cur
-                        return _pre + `
+                            const { content, url, hashId } = _cur
+                            return _pre + `
                             <section>
                                 <article>${content}</article>
                                 <img class="img" src="${url}" alt="${hashId}">
                             </section>
                         `
-                    }, "")
+                        }, "")
                     }
 
                     $("#content").html(_html)
                 })
             }
-            const init = () => fetchJoke()
+
+            const isShowTopBtn = () => {
+                // 根据距离来展示回到顶部按钮
+                const distance = 300
+                let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop
+                if(scrollHeight >= distance) topBtnEle.style.display = "block"
+                else topBtnEle.style.display = "none"
+                
+            }
+
+            const toTop = () => window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            })
+
+            const init = () => {
+                fetchJoke()
+                // 增加监听事件
+                window.onscroll = () => isShowTopBtn()
+                topBtnEle.onclick = () => toTop()
+            }
+
             init()
             $btn.click(() => fetchJoke())
         })
@@ -67,6 +103,8 @@
     <h1>笑一笑十年少</h1>
     <div id="content"></div>
     <button id="btn">刷新</button>
+    <!-- 回到顶部按钮 -->
+    <div id="top-btn"></div>
 </body>
 
 </html>
