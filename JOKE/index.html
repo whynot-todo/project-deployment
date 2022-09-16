@@ -23,32 +23,57 @@
 
         button {
             display: block;
-            width: 100px;
+            width: 100%;
             border: none;
             background-color: blue;
             color: #fff;
-            padding: 5px 10px;
+            padding: 10px 10px;
             outline: none;
             border-radius: 2px;
         }
 
-        #top-btn{
+        #top-btn {
             position: fixed;
             bottom: 10px;
             right: 10px;
             display: none;
-            width: 100px;
-            height: 100px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background-color: #000;
+            background-color: #fff;
+            background-position: center center;
             background-image: url(https://g.csdnimg.cn/side-toolbar/3.4/images/fanhuidingbucopy.png);
             background-repeat: no-repeat;
-            background-size: 100% 100%;
+            background-size: 30% 30%;
+        }
+
+        #popup {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, .5);
+        }
+
+        .loading {
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            text-align: center;
+            line-height: 100px;
+            transform: translate(-50%, -50%);
+
         }
     </style>
-    <script>
+    <script type="module">
         $(() => {
-            const $btn = $("#btn"), url = "https://bird.ioliu.cn/joke/rand"
+            const $btn = $("#btn")
+            const url = "https://bird.ioliu.cn/joke/rand"
             const topBtnEle = document.getElementById("top-btn")
             function throttle(func, delay) {
                 let run = true
@@ -63,7 +88,8 @@
             }
 
             const fetchJoke = () => {
-                $.getJSON(url, (res) => {
+                isShowLoading(true)
+                $.getJSON(url, async(res) => {
                     let _html = ""
                     const { data } = res
                     if (JSON.stringify(data) == "{}") {
@@ -79,8 +105,9 @@
                         `
                         }, "")
                     }
-
                     $("#content").html(_html)
+                    await isAllImgLoad()
+                    isShowLoading(false)
                 })
             }
 
@@ -88,15 +115,51 @@
                 // 根据距离来展示回到顶部按钮
                 const distance = 300
                 let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop
-                if(scrollHeight >= distance) topBtnEle.style.display = "block"
+                if (scrollHeight >= distance) topBtnEle.style.display = "block"
                 else topBtnEle.style.display = "none"
-                
+
             }
 
             const toTop = () => window.scrollTo({
                 top: 0,
                 behavior: "smooth"
             })
+
+            const isShowLoading = flag => {
+                const $popup = $("#popup")
+                const $body = $("body")
+                if (flag) {
+                    console.log("开始显示弹窗~~",$popup);
+                    // 单例模式，如果弹窗存在，就不创建了
+                    if($.isEmptyObject($popup)) return
+                    const _html = `<section id="popup">
+                                        <div class="loading">loading...</div>
+                                    </section>`
+                    $body.append(_html)
+                    $body.css("overflow","hidden") // 弹框期间禁止滑动
+                } else {
+                    console.log("弹窗关闭了~~")
+                    $("#popup").remove()
+                    $body.css("overflow","visible")
+                }
+            }
+
+            const isAllImgLoad = async() => {
+                // 判断当前的页面的所有的图片是否加载完毕
+                const _all = []
+                $.each($("img"),(_index,_item) => {
+                    const _promise = new Promise((resolve,reject) => {
+                        _item.onload = () => {
+                            console.log(`第${_index + 1}张图片加载完毕~~`)
+                            resolve(true)
+                        }
+                    })
+                    _all.push(_promise)
+                })
+                const _promise = Promise.all(_all)
+                console.log(_promise)
+                await _promise
+            }
 
             const init = () => {
                 fetchJoke()
@@ -106,7 +169,10 @@
             }
 
             init()
-            $btn.click(() => fetchJoke())
+            $btn.click(() => {
+                fetchJoke()
+                toTop()
+            })
         })
     </script>
 </head>
