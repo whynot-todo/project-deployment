@@ -89,26 +89,31 @@
 
             const fetchJoke = () => {
                 isShowLoading(true)
-                $.getJSON(url, async(res) => {
-                    let _html = ""
-                    const { data } = res
-                    if (JSON.stringify(data) == "{}") {
-                        _html = `<article>今日笑话已看完</article>`
-                    } else {
-                        _html = data.reduce((_pre, _cur) => {
-                            const { content, url, hashId } = _cur
-                            return _pre + `
+                try {
+                    $.getJSON(url, async (res) => {
+                        let _html = ""
+                        const { data } = res
+                        if (JSON.stringify(data) == "{}") {
+                            _html = `<article>今日笑话已看完</article>`
+                        } else {
+                            _html = data.reduce((_pre, _cur) => {
+                                const { content, url, hashId } = _cur
+                                return _pre + `
                             <section>
                                 <article>${content}</article>
                                 <img class="img" src="${url}" alt="${hashId}">
                             </section>
                         `
-                        }, "")
-                    }
-                    $("#content").html(_html)
-                    await isAllImgLoad()
+                            }, "")
+                        }
+                        $("#content").html(_html)
+                        await isAllImgLoad()
+                        isShowLoading(false)
+                    })
+                } catch (error) {
+                    console.log(error)
                     isShowLoading(false)
-                })
+                }
             }
 
             const isShowTopBtn = () => {
@@ -129,7 +134,6 @@
                 const $popup = $("#popup")
                 const $body = $("body")
                 if (flag) {
-                    console.log("开始显示弹窗~~",$popup);
                     // 单例模式，如果弹窗存在，就不创建了
                     if($.isEmptyObject($popup)) return
                     const _html = `<section id="popup">
@@ -138,7 +142,6 @@
                     $body.append(_html)
                     $body.css("overflow","hidden") // 弹框期间禁止滑动
                 } else {
-                    console.log("弹窗关闭了~~")
                     $("#popup").remove()
                     $body.css("overflow","visible")
                 }
@@ -157,7 +160,6 @@
                     _all.push(_promise)
                 })
                 const _promise = Promise.all(_all)
-                console.log(_promise)
                 await _promise
             }
 
