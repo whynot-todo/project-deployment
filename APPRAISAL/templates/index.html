@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{static_url('lib/echarts.js')}}"></script>
+    <title>Document</title>
+    <style>
+        :root {
+            --tw-shadow: 0px 2px 10px 0px rgba(0,0,0,0.08);
+            --tw-ring-shadow: 0 0 transparent;
+            --tw-ring-offset-shadow: 0 0 transparent;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body{
+            background-color: #f4f4f4;
+        }
+        .card{
+            /* 必须在文档流中 */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: var(--tw-ring-offset-shadow,0 0 transparent),var(--tw-ring-shadow,0 0 transparent),var(--tw-shadow);
+        }
+        li {
+            list-style: none;
+        }
+
+        #list_chart {
+            margin: 10px auto;
+            position: relative;
+            width: 1000px;
+            height: 150px;
+            background-color: #fff;
+        }
+
+        #list_chart li {
+            height: 100%;
+            position: absolute;
+        }
+        table {
+            display: block;
+            border-spacing: 0px;
+            border-collapse: collapse;
+            width: 800px;
+            height: 500px;
+            overflow: auto;
+        }
+        .table{
+            position: relative;
+            width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            margin: 10px auto;
+        }
+        tr{
+            display: block;
+            padding: 5px 10px;
+        }
+        tr:hover{
+            background-color: #eaedef;
+        }
+        tr:nth-child(even){
+            background-color: #fff;
+        }
+        td,th{
+            text-align: left;
+            width: 200px;
+            padding: 5px 10px;
+            box-sizing: border-box;
+        }
+        .theader{
+            width: 800px;
+            background-color: #f4f4f4;
+            position: absolute;
+            box-sizing: border-box;
+        }
+        iframe{
+            border: none;
+        }
+        .max-continus{
+            margin-left: 15px;
+            margin-bottom: 20px;
+        }
+        .max-continus span{
+            display: block;
+        }
+        .max-continus span:nth-child(1){
+            width: 150px;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .max-continus span:nth-child(2){
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 30px;
+            color: red;
+            font-weight: bold;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <ul id="list_chart" class="card">
+        {% for _i in tomato_list %}
+        {% set style_str = f"left:{_i['left']}px;width:{_i['width']}px;background-color:{_i['bgColor'] if _i['bgColor'] else 'red'}" %}
+        <li style="{{style_str}}"></li>
+        {% end %}
+    </ul>
+    <section class="table">
+        <table class="card">
+            <tr class="theader">
+                <th>任务</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>休息时间</th>
+            </tr>
+            {% for _i in tomato_list %}
+            {% set style_str =f"background-color:{_i['bgColor']};" if _i["bgColor"] else "" %}
+            <tr style="{{style_str}}">
+                <td>{{_i["task"][0]["title"]}}</td>
+                <td>{{_i["start_time"]}}</td>
+                <td>{{_i["end_time"]}}</td>
+                <td>{{_i["rest_time"]}}</td>
+            </tr>
+            {% end %}
+        </table>
+        <div>
+            <section class="max-continus card">
+                <span>最大连续</span>
+                <span>{{max_continus["max_continus"]}}</span>
+            </section>
+            <section class="max-continus card">
+                <span>当前连续</span>
+                <span>{{max_continus["last_continus"]}}</span>
+            </section>
+        </div>
+    </section>
+    <!-- <div id="echart" style="width: 600px;height:400px;"></div> -->
+    <iframe style="width: 100%;height: 1000px;" src="https://dida365.com/webapp/#statistics/pomo"></iframe>
+    <!-- <script>
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echart'));
+
+        // 指定图表的配置项和数据
+        option = {
+            series: [
+                {
+                    type: 'pie',
+                    data: [
+                        {
+                            value: 100,
+                            name: 'A'
+                        },
+                        {
+                            value: 200,
+                            name: 'B'
+                        },
+                        {
+                            value: 300,
+                            name: 'C'
+                        },
+                        {
+                            value: 400,
+                            name: 'D'
+                        },
+                        {
+                            value: 500,
+                            name: 'E'
+                        }
+                    ],
+                    roseType: 'area'
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script> -->
+</body>
+
+</html>

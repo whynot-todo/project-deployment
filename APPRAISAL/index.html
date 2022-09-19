@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">获取数据</button>
+    <script>
+        const url = "https://api.dida365.com/api/v2/pomodoros/timeline"
+        const headers = {
+            accept: "application/json, text/plain, */*",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            cookie: "UM_distinctid=180929bb18739d-09462cf713e58c-49647e56-144000-180929bb188335; t=73AE2E6CC13DD96769D3228AEF41CBE964EDC68D37C3D367BA9245FB043EC7D7186C31FD3F39C211862E9EE26FDF737A101401AE59A9B2604C3B36C08BDB3E60A13A0371B5EB85CEA02292AF70C5C33D7471C6C8CCE687EF4E8C68F32CC0AB51385AA04082B6E13207380EE6E17F65D7FFFFEEAD0717CC2C25CF649369FDC0C5C584137C5C040F2F6977C7AE93E07C3C0A6993E9066367DBC093C355F178EA86151002FFD8A51141ED48EB889B07BD4E; AWSALB=PzP62kX7+ewBy3hwAAlfZGcwd1d7lOnXFTb8T13nCS69PEMiNYWTdGVJr3QmmZQieobNR1bz6fwUo2ZHtvluw3IBVlf5ETuv0DKEV+njUgiDEwl0q91SIqnIdZuD; AWSALBCORS=PzP62kX7+ewBy3hwAAlfZGcwd1d7lOnXFTb8T13nCS69PEMiNYWTdGVJr3QmmZQieobNR1bz6fwUo2ZHtvluw3IBVlf5ETuv0DKEV+njUgiDEwl0q91SIqnIdZuD",
+            hl: "zh_CN",
+            origin: "https://dida365.com",
+            referer: "https://dida365.com/",
+            "sec-ch-ua": '"Microsoft Edge";v="105", " Not;A Brand";v="99", "Chromium";v="105"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "Windows",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-site",
+            "traceid": "632596a16285a8648d1118d5",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.42",
+            "x-device": '{"platform": "web","os": "Windows 10","device": "Chrome 105.0.0.0","name": "","version": 4265,"id": "630a2f0e1ed3070024891234","channel": "website","campaign": "", "websocket": "632546056285a8648d1117b0"}'
+        }
+            const fetchData = async() => { 
+                const data = await axios.get(url,{headers})
+                console.log(data);
+            }
+            const btn = document.getElementById("btn")
+            btn.onclick = () => {
+                fetchData()
+            }
+    </script>
+</body>
+</html>
