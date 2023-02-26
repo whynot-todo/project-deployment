@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-class">
 
 <head>
     <meta charset="UTF-8">
@@ -13,6 +13,20 @@
             --tw-ring-shadow: 0 0 transparent;
             --tw-ring-offset-shadow: 0 0 transparent;
         }
+
+        .scroll-class::-webkit-scrollbar {
+            width: 5px;  
+            height: 1px;
+        }
+        .scroll-class::-webkit-scrollbar-track {
+        background-color:#fff;
+    }
+
+    .scroll-class::-webkit-scrollbar-thumb {
+        background: #535353;
+        border-radius: 5px;
+    }
+
         * {
             margin: 0;
             padding: 0;
@@ -65,9 +79,6 @@
         tr:hover{
             background-color: #eaedef;
         }
-        tr:nth-child(even){
-            background-color: #fff;
-        }
         td,th{
             text-align: left;
             width: 200px;
@@ -77,7 +88,8 @@
         .theader{
             width: 800px;
             background-color: #f4f4f4;
-            position: absolute;
+            position: sticky;
+            top:0;
             box-sizing: border-box;
         }
         iframe{
@@ -103,11 +115,17 @@
             color: red;
             font-weight: bold;
         }
+        .max-continus span:nth-child(3){
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+        }
         
     </style>
 </head>
 
-<body>
+<body class="">
     <ul id="list_chart" class="card">
         {% for _i in tomato_list %}
         {% set style_str = f"left:{_i['left']}px;width:{_i['width']}px;background-color:{_i['bgColor'] if _i['bgColor'] else 'red'}" %}
@@ -115,7 +133,7 @@
         {% end %}
     </ul>
     <section class="table">
-        <table class="card">
+        <table class="card scroll-class">
             <tr class="theader">
                 <th>任务</th>
                 <th>开始时间</th>
@@ -140,6 +158,12 @@
             <section class="max-continus card">
                 <span>当前连续</span>
                 <span>{{max_continus["last_continus"]}}</span>
+            </section>
+            <section class="max-continus card">
+                <span>当前得分</span>
+                <span>{{score["score"]}}</span>
+                {% set style_str =f"color:{score['color']};"%}
+                <span style="{{style_str}}">{{score["desc"]}}</span>
             </section>
         </div>
     </section>

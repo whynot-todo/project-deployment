@@ -79,14 +79,41 @@ class MainHandler(tornado.web.RequestHandler):
         return max(contu_list), contu_list[-1]
 
     @staticmethod
-    def get_score():
-        """
-        1. 连续的番茄
-        2. 不连续的番茄
-        2. 番茄的时长
-        3. 无标题的番茄或者添加的番茄
-        """
-        pass
+    def get_score(tomato_list):
+
+        day_long = 9 # 一天专注9小时
+        day_long_score = 80 # 时长分数为80分
+        minute_score = (day_long_score / day_long) / 60
+        continus_tomato = 0.8 # 连续番茄 + 0.8
+        no_continus_tomato = -1 # 分连续番茄 -1
+        no_title_tomato = 0 # 无任务番茄 0
+        level_map = {
+            (0,30):dict(color="black",desc="极差"),
+            (30,60):dict(color="gray",desc="差"),
+            (60,70):dict(color="green",desc="及格"),
+            (70,80):dict(color="yellow",desc="中等"),
+            (80,90):dict(color="pink",desc="良好"),
+            (90,100):dict(color="red",desc="优秀"),
+            (100,200):dict(color="blue",desc="赢家")
+        }
+        score_list = []
+        for _i in tomato_list:
+            # 分钟数得分
+            score_list.append(_i["sustain_time"].seconds / 60 * minute_score)
+            if _i["is_continuous"]:
+                score_list.append(continus_tomato)
+            elif not _i["is_continuous"]:
+                score_list.append(no_continus_tomato)
+            elif not _i.get("task")[0].get("title"):
+                score_list.append(no_title_tomato)
+        score = round(sum(score_list),2)
+        score_msg = {}
+        for _k,_v in level_map.items():
+            _start,_end = _k
+            if _start <= score < _end:
+                score_msg = _v
+        return score,score_msg
+
 
 
     def get(self):
@@ -122,8 +149,8 @@ class MainHandler(tornado.web.RequestHandler):
             _tomato, tasks_list = dict(), _i["tasks"]
             start_time = self.format_datetime(_i["startTime"])
             end_time = self.format_datetime(_i["endTime"])
-            # if not self.is_today(start_time):
-            #     continue
+            if not self.is_today(start_time):
+                continue
             # 任务信息处理
             _tomato["task"] = []
             for _t in tasks_list:
@@ -146,14 +173,17 @@ class MainHandler(tornado.web.RequestHandler):
             _tomato["is_continuous"] = _is_continuous
             rest_time = round(_delta.seconds / 60, 2)
             _tomato["rest_time"] = '较长' if rest_time > 200 else rest_time
+            _tomato["sustain_time"] = end_time - start_time
             _tomato["bgColor"] = self.get_bg_color(_tomato)
 
             _res.append(_tomato)
         max_continus, last_continus = self.get_max_continus(_res)
+        score,score_msg = self.get_score(_res)
         self.render(
             "index.html",
             tomato_list=self.parse_time_block(_res),
-            max_continus=dict(max_continus=max_continus,last_continus=last_continus)
+            max_continus=dict(max_continus=max_continus,last_continus=last_continus),
+            score=dict(score=score, **score_msg)
         )
 
 
@@ -169,6 +199,7 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(8888)
+    app.listen(4000)
     print("OK~~~~")
     tornado.ioloop.IOLoop.current().start()
+
